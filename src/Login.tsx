@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import {  useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios"
 
 const Login = () => {
   const navigate = useNavigate();
-    const [email,setEmail] = useState();
+    const [email, setEmail] = useState<string>("");
     const [password,setPassword]=useState();
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: React.ChangeEvent<HTMLInputElement>) => {
       e.preventDefault();
 
       try{
