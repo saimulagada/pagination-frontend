@@ -7,9 +7,9 @@ const Register = () => {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState<string>("");
 
-  const handleRegister = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {

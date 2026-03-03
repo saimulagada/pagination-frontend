@@ -5,9 +5,9 @@ import axios from "axios"
 const Login = () => {
   const navigate = useNavigate();
     const [email, setEmail] = useState<string>("");
-    const [password,setPassword]=useState();
+    const [password, setPassword] = useState<string>("");
 
-  const handleLogin = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
       try{
