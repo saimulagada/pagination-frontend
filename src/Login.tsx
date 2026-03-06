@@ -1,38 +1,44 @@
-import {  useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"
+import axios from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
-    const [email, setEmail] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
+
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
+    e.preventDefault();
 
-      try{
-    const resp = await axios.post("http://localhost:3000/login",{
+    try {
+      const resp = await axios.post("http://localhost:3000/login", {
         email,
-        password
-    });
-     console.log("resp is",resp)
-    if (resp){
-        localStorage.setItem("accessToken", resp.data.accessToken);
-localStorage.setItem("refreshToken", resp.data.refreshToken);
-                alert("login successful")
-        navigate("/paginated-emails")
-    }
-     }
-   
-      catch(e){
-         alert("invalid credentials")
-        console.log("error is",e)
+        password,
+      });
+
+      console.log("Login response:", resp.data);
+
+      const { accessToken, refreshToken } = resp.data;
+
+      if (accessToken && refreshToken) {
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+
+        alert("Login successful");
+
+        navigate("/paginated-emails");
       }
-  
+    } catch (error: any) {
+      console.log("Login error:", error);
 
+      if (error.response) {
+        alert(error.response.data.message || "Invalid credentials");
+      } else {
+        alert("Server error. Try again later.");
+      }
+    }
   };
-
- 
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600">
@@ -44,6 +50,7 @@ localStorage.setItem("refreshToken", resp.data.refreshToken);
 
         {/* Form */}
         <form className="space-y-5" onSubmit={handleLogin}>
+          
           {/* Email */}
           <div>
             <label className="block text-sm font-medium text-gray-600 mb-1">
@@ -51,9 +58,11 @@ localStorage.setItem("refreshToken", resp.data.refreshToken);
             </label>
             <input
               type="email"
+              value={email}
               placeholder="Enter your email"
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </div>
 
@@ -64,32 +73,33 @@ localStorage.setItem("refreshToken", resp.data.refreshToken);
             </label>
             <input
               type="password"
+              value={password}
               placeholder="Enter your password"
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </div>
 
-          {/* Button */}
+          {/* Login Button */}
           <button
             type="submit"
             className="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition duration-300"
-
           >
             Login
           </button>
         </form>
 
         {/* Footer */}
-       <p className="text-sm text-center text-gray-500 mt-6">
-  Don’t have an account?{" "}
-  <span
-    className="text-indigo-600 font-medium cursor-pointer"
-    onClick={() => navigate("/register")}
-  >
-    Sign up
-  </span>
-</p>
+        <p className="text-sm text-center text-gray-500 mt-6">
+          Don’t have an account?{" "}
+          <span
+            className="text-indigo-600 font-medium cursor-pointer"
+            onClick={() => navigate("/register")}
+          >
+            Sign up
+          </span>
+        </p>
       </div>
     </div>
   );
